@@ -29,11 +29,15 @@ main = do
     args <- getArgs
     let passChars = show (read (head args) :: Int)
     manager <- newManager tlsManagerSettings
-    request <- parseRequest ("https://www.random.org/integers/?num=" ++ passChars ++ "&min=1&max=69&col=1&base=10&format=plain&rnd=new" :: String)
+    request <- parseRequest ("https://www.random.org/integers/?num=" ++ 
+        passChars ++ "&min=1&max=69&col=1&base=10&format=plain&rnd=new" :: String)
+    
     response <- httpLbs request manager
-    Prelude.putStrLn $ "The status code was: " ++
-               show (statusCode $ responseStatus response)
-    print $ map encode (map (read::String->Int) (init (map C.unpack (C.split '\n' (responseBody response)))))
+    Prelude.putStrLn $ "The status code was: " ++ 
+        show (statusCode $ responseStatus response)
+    
+    print $ map encode $ map (read::String->Int) $
+        init (map C.unpack (C.split '\n' (responseBody response)))
 
 encode :: Int -> Char
 encode 1 = 'a'
